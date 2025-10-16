@@ -12,17 +12,17 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
     private Connection conn = null;
 
     private static String SQL_INSERT =
-            "INSERT INTO usuarios (nombre, apellido, telefono) " +
-                    "VALUES (?, ?, ?)";
+            "INSERT INTO usuarios (nombre, apellido, telefono, contrasenia) " +
+                    "VALUES (?, ?, ?, ?)";
 
     private static String SQL_UPDATE =
             "UPDATE usuarios SET " + "nombre = ?, " + "apellido = ?, " + "telefono = ? " +
                     "WHERE idCliente = ?";
 
-    private static String SQL_DELETE = "DELETE FROM clientes WHERE idUsuario = ?";
-    private static String SQL_GETALL = "SELECT * FROM clientes ORDER BY nombre";
-    private static String SQL_GETBYID = "SELECT * FROM clientes WHERE idUsuario = ?";
-    private static String SQL_EXISTSBYID = "SELECT * FROM clientes WHERE idUsuario = ?";
+    private static String SQL_DELETE = "DELETE FROM usuarios WHERE idUsuario = ?";
+    private static String SQL_GETALL = "SELECT * FROM usuarios ORDER BY nombre";
+    private static String SQL_GETBYID = "SELECT * FROM usuarios WHERE idUsuario = ?";
+    private static String SQL_EXISTSBYID = "SELECT * FROM usuarios WHERE idUsuario = ?";
 
 
 
@@ -45,6 +45,7 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
                 usuario.setNombre(rs.getString("nombre"));
                 usuario.setApellido(rs.getString("apellido"));
                 usuario.setTelefono(rs.getString("telefono"));
+                usuario.setTelefono(rs.getString("contrasenia"));
 
                 lista.add(usuario);
             }
@@ -72,12 +73,13 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
             pst.setString(1, usuario.getNombre());
             pst.setString(2, usuario.getApellido());
             pst.setString(3, usuario.getTelefono());
+            pst.setString(4, usuario.getContrasenia());
 
             int resultado = pst.executeUpdate();
             if (resultado == 1) {
-                System.out.println("Cliente agregado correctamente.");
+                System.out.println("Usuario agregado correctamente.");
             } else {
-                System.out.println("No se pudo agregar el cliente.");
+                System.out.println("No se pudo agregar el usuario.");
             }
 
             rs = pst.getGeneratedKeys();
@@ -107,12 +109,13 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
                 pst.setString(2, objeto.getApellido());
                 pst.setString(3, objeto.getTelefono());
                 pst.setInt(4, objeto.getIdUsuario());
+                pst.setString(5, objeto.getContrasenia());
 
                 int resultado = pst.executeUpdate();
                 if (resultado == 1) {
-                    System.out.println("Cliente actualizado correctamente");
+                    System.out.println("Usuario actualizado correctamente");
                 } else {
-                    System.out.println("No se pudo actualizar el cliente");
+                    System.out.println("No se pudo actualizar el usuario");
                 }
                 pst.close();
                 conn.close();
@@ -134,15 +137,15 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
 
             if (resultado == 1) {
                 conn.commit();
-                System.out.println("Cliente eliminado correctamente");
+                System.out.println("Usuario eliminado correctamente");
             } else {
-                System.out.println("No se pudo eliminar el cliente");
+                System.out.println("No se pudo eliminar el usuario");
             }
 
             pst.close();
             conn.close();
         } catch (SQLException e) {
-            System.out.println("No se pudo eliminar el cliente. Error: " + e.getMessage());
+            System.out.println("No se pudo eliminar el usuario. Error: " + e.getMessage());
         }
 
     }

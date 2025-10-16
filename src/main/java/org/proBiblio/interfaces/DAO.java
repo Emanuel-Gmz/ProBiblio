@@ -3,7 +3,6 @@ package org.proBiblio.interfaces;
 import java.util.List;
 
 public interface DAO<O, K> {
-  //O de Objeto, K de Key (clave primaria)
 
   public List<O> getAll();
 

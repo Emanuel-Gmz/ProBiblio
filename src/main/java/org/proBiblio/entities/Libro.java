@@ -7,16 +7,22 @@ public class Libro{
     private String ISBN;
     private String nombre;
     private String autor;
+    private String descrip;
 
 
     public Libro(){idLibro = -1;}
 
-    public Libro(String ISBN, String autor, String nombre) {
+    public Libro(String ISBN, String autor, String nombre,String descrip) {
         super();
         this.ISBN = ISBN;
         this.autor = autor;
         this.nombre = nombre;
+        this.descrip = descrip;
     }
+
+    public String getDescrip() {return descrip;}
+
+    public void setDescrip(String descrip) {this.descrip = descrip;}
 
     public int getIdLibro() {return idLibro;}
 
@@ -41,6 +47,7 @@ public class Libro{
                 ", ISBN='" + ISBN + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", autor='" + autor + '\'' +
+                ", descrip='" + descrip + '\'' +
                 '}';
     }
 
@@ -48,11 +55,11 @@ public class Libro{
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Libro libro = (Libro) o;
-        return idLibro == libro.idLibro && Objects.equals(ISBN, libro.ISBN) && Objects.equals(nombre, libro.nombre) && Objects.equals(autor, libro.autor);
+        return idLibro == libro.idLibro && Objects.equals(ISBN, libro.ISBN) && Objects.equals(nombre, libro.nombre) && Objects.equals(autor, libro.autor) && Objects.equals(descrip, libro.descrip);
     }
 
     @Override
-    public int hashCode() {return Objects.hash(idLibro, ISBN, nombre, autor);}
-
-
+    public int hashCode() {
+        return Objects.hash(idLibro, ISBN, nombre, autor, descrip);
+    }
 }
