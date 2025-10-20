@@ -3,18 +3,18 @@ package org.proBiblio.entities;
 import java.util.Date;
 import java.util.Objects;
 
-public class Prestamos {
+public class Prestamo {
     private int idPrestamo;
     private Date fechaEntre;
     private Usuario usuario;
     private Libro libro;
     private Date fechaDevo;
 
-    public Prestamos(int idPrestamo) {
+    public Prestamo(int idPrestamo) {
         this.idPrestamo = -1;
     }
 
-    public Prestamos(int idPrestamo, Date fechaEntre, Usuario usuario, Libro libro, Date fechaDevo) {
+    public Prestamo(int idPrestamo, Date fechaEntre, Usuario usuario, Libro libro, Date fechaDevo) {
         this.idPrestamo = idPrestamo;
         this.fechaEntre = fechaEntre;
         this.usuario = usuario;
@@ -45,8 +45,8 @@ public class Prestamos {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Prestamos prestamos = (Prestamos) o;
-        return idPrestamo == prestamos.idPrestamo && Objects.equals(fechaEntre, prestamos.fechaEntre) && Objects.equals(usuario, prestamos.usuario) && Objects.equals(libro, prestamos.libro) && Objects.equals(fechaDevo, prestamos.fechaDevo);
+        Prestamo prestamo = (Prestamo) o;
+        return idPrestamo == prestamo.idPrestamo && Objects.equals(fechaEntre, prestamo.fechaEntre) && Objects.equals(usuario, prestamo.usuario) && Objects.equals(libro, prestamo.libro) && Objects.equals(fechaDevo, prestamo.fechaDevo);
     }
 
     @Override

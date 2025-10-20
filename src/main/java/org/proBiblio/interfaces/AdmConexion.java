@@ -12,13 +12,13 @@ public interface AdmConexion {
     String dbDriver = "com.mysql.cj.jdbc.Driver";
 
     // cadena de conexion a mi base de datos
-    String dbCadenaDeConexion = "jdbc:mysql://127.0.0.1:3306/biblioteca";
+    String dbCadenaDeConexion = "jdbc:mysql://127.0.0.1:3306/probiblioteca";
 
     // nom usuario
     String dbUsuario = "root";
 
     // pass bd
-    String dbPass = "1234";
+    String dbPass = "eseqele12";
 
     Connection conn = null;
 

@@ -12,12 +12,12 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
     private Connection conn = null;
 
     private static String SQL_INSERT =
-            "INSERT INTO usuarios (nombre, apellido, telefono, contrasenia) " +
-                    "VALUES (?, ?, ?, ?)";
+            "INSERT INTO usuarios (nombre, apellido, telefono, contrasenia, rol) " +
+                    "VALUES (?, ?, ?, ?, ?)";
 
     private static String SQL_UPDATE =
             "UPDATE usuarios SET " + "nombre = ?, " + "apellido = ?, " + "telefono = ? " +
-                    "WHERE idCliente = ?";
+                    "WHERE idUsuario = ?";
 
     private static String SQL_DELETE = "DELETE FROM usuarios WHERE idUsuario = ?";
     private static String SQL_GETALL = "SELECT * FROM usuarios ORDER BY nombre";
@@ -70,10 +70,11 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
         try {
             pst = conn.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
 
-            pst.setString(1, usuario.getNombre());
-            pst.setString(2, usuario.getApellido());
-            pst.setString(3, usuario.getTelefono());
-            pst.setString(4, usuario.getContrasenia());
+            pst.setString(1, objeto.getNombre());
+            pst.setString(2, objeto.getApellido());
+            pst.setString(3, objeto.getTelefono());
+            pst.setString(4, objeto.getContrasenia());
+            pst.setString(5, objeto.getRol().toString());
 
             int resultado = pst.executeUpdate();
             if (resultado == 1) {

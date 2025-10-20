@@ -7,22 +7,28 @@ public class Libro{
     private String ISBN;
     private String nombre;
     private String autor;
-    private String descrip;
+    private String descripcion;
+    private Categoria categoria;
 
 
     public Libro(){idLibro = -1;}
 
-    public Libro(String ISBN, String autor, String nombre,String descrip) {
+    public Libro(String ISBN, String autor, String nombre,String descrip, Categoria categoria) {
         super();
         this.ISBN = ISBN;
         this.autor = autor;
         this.nombre = nombre;
-        this.descrip = descrip;
+        this.descripcion = descrip;
+        this.categoria = categoria;
     }
 
-    public String getDescrip() {return descrip;}
+  public Categoria getCategoria() {return categoria;}
 
-    public void setDescrip(String descrip) {this.descrip = descrip;}
+  public void setCategoria(Categoria categoria) {this.categoria = categoria;}
+
+  public String getDescripcion() {return descripcion;}
+
+    public void setDescripcion(String descripcion) {this.descripcion = descripcion;}
 
     public int getIdLibro() {return idLibro;}
 
@@ -47,7 +53,7 @@ public class Libro{
                 ", ISBN='" + ISBN + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", autor='" + autor + '\'' +
-                ", descrip='" + descrip + '\'' +
+                ", descrip='" + descripcion + '\'' +
                 '}';
     }
 
@@ -55,11 +61,11 @@ public class Libro{
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Libro libro = (Libro) o;
-        return idLibro == libro.idLibro && Objects.equals(ISBN, libro.ISBN) && Objects.equals(nombre, libro.nombre) && Objects.equals(autor, libro.autor) && Objects.equals(descrip, libro.descrip);
+        return idLibro == libro.idLibro && Objects.equals(ISBN, libro.ISBN) && Objects.equals(nombre, libro.nombre) && Objects.equals(autor, libro.autor) && Objects.equals(descripcion, libro.descripcion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idLibro, ISBN, nombre, autor, descrip);
+        return Objects.hash(idLibro, ISBN, nombre, autor, descripcion);
     }
 }

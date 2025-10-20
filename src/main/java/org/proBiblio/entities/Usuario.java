@@ -23,7 +23,11 @@ public class Usuario {
         this.rol = rol;
     }
 
-    public String getContrasenia() {return contrasenia;}
+  public Rol getRol() {return rol;}
+
+  public void setRol(Rol rol) {this.rol = rol;}
+
+  public String getContrasenia() {return contrasenia;}
 
     public void setContrasenia(String contrasenia) {this.contrasenia = contrasenia;}
 
