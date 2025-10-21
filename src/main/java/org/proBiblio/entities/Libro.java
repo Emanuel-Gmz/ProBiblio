@@ -13,12 +13,12 @@ public class Libro{
 
     public Libro(){idLibro = -1;}
 
-    public Libro(String ISBN, String autor, String nombre,String descrip, Categoria categoria) {
+    public Libro(String ISBN, String autor, String nombre,String descripcion, Categoria categoria) {
         super();
         this.ISBN = ISBN;
         this.autor = autor;
         this.nombre = nombre;
-        this.descripcion = descrip;
+        this.descripcion = descripcion;
         this.categoria = categoria;
     }
 
@@ -53,8 +53,8 @@ public class Libro{
                 ", ISBN='" + ISBN + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", autor='" + autor + '\'' +
-                ", descrip='" + descripcion + '\'' +
-                '}';
+                ", descripcion='" + descripcion + '\'' +
+                ", categoria='" + categoria;
     }
 
     @Override

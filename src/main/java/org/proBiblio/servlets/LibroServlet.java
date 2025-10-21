@@ -28,23 +28,26 @@ public class LibroServlet extends HttpServlet {
 
     operacion = req.getParameter("operacion");
 
-    if ("editar".equals(operacion) || "nuevo".equals(operacion)) {
+//    http://localhost:8080/ProBiblio/LibroServlet?txtId=4&operacion=editar&txtISBN=AB12-CD45-12&txtNombre=Lazarillo+De+Tornes&txtAutor=Tornes&txtDescripcion=Es+un+libro&txtCategoria=Educativo
+    if (operacion.equals("editar") || operacion.equals("nuevo")) {
       ISBN = req.getParameter("txtISBN");
       nombre = req.getParameter("txtNombre");
       autor = req.getParameter("txtAutor");
       descripcion = req.getParameter("txtDescripcion");
       categoria = Categoria.valueOf(req.getParameter("txtCategoria"));
     } else {
-      id = Integer.parseInt(req.getParameter("id"));
     }
 
     LibroImpl libroImpl = new LibroImpl();
-    if ("nuevo".equals(operacion)) {
+    if (operacion.equals("nuevo")) {
       Libro libroNuevo = new Libro(ISBN, nombre, autor, descripcion, categoria);
       libroImpl.insert(libroNuevo);
     }
 
-    if ("editar".equals(operacion)) {
+    if (operacion.equals("editar")) {
+      id = Integer.parseInt(req.getParameter("txtId"));
+
+
       Libro libroEditar = libroImpl.getById(id);
       libroEditar.setISBN(ISBN);
       libroEditar.setNombre(nombre);
@@ -54,7 +57,8 @@ public class LibroServlet extends HttpServlet {
       libroImpl.update(libroEditar);
     }
 
-    if ("eliminar".equals(operacion)) {
+    if (operacion.equals("eliminar")) {
+      id = Integer.parseInt(req.getParameter("txtId"));
       libroImpl.delete(id);
     }
 
@@ -63,11 +67,4 @@ public class LibroServlet extends HttpServlet {
 
   }
 
-  /* Supuestamente para actualizar la BD se usa esto
-  @Override
-  protected void doPost (HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-
-  }
-
-   */
 }

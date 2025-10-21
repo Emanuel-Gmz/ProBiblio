@@ -14,8 +14,8 @@
 
 <h2>
 <c:choose>
-    <c:when test = "${param.operacion == 'editar'}"> Editar Auto </c:when>
-    <c:when test = "${param.operacion == 'eliminar'}"> Eliminar Auto </c:when>
+    <c:when test = "${param.operacion == 'editar'}"> Editar Libro </c:when>
+    <c:when test = "${param.operacion == 'eliminar'}"> Eliminar Libro </c:when>
     <c:otherwise> Nuevo Libro </c:otherwise>
 </c:choose>
 </h2>
@@ -64,14 +64,14 @@
     <br>
 
     <label for ="txtDescripcion"> Descripcion </label>
-    <input type = "text" name = "txtDescripcion" id = "txtDescripcion" placeholder = "Descripcion"
+    <input type = "text" name = "txtDescripcion" id = "txtDescripcion" placeholder = "Ingrese la Descripcion"
         value = "${not empty libroEditar.descripcion ? libroEditar.descripcion : ''}"
     required />
 
     <br>
 
-        <label for ="txtCategoria"> Descripcion </label>
-        <input type = "text" name = "txtCategoria" id = "txtCategoria" placeholder = "Categoria"
+        <label for ="txtCategoria"> Categoria </label>
+        <input type = "text" name = "txtCategoria" id = "txtCategoria" placeholder = "Ingrese una Categoria"
             value = "${not empty libroEditar.categoria ? libroEditar.categoria : ''}"
         required />
 

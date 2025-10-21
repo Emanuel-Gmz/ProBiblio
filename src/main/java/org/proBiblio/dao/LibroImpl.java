@@ -15,16 +15,16 @@ public class LibroImpl implements AdmConexion, DAO <Libro, Integer>{
     private Connection conn = null;
 
     private static String SQL_INSERT =
-            "INSERT INTO libros (ISBN, nombre, autor, descripcion, categoria)" +
-                    "VALUES (?, ?, ?, ?, ?)";
+            "INSERT INTO libros (ISBN, nombre, autor, descripcion, categoria) " +
+                    " VALUES (?, ?, ?, ?, ?)";
 
     private static String SQL_UPDATE =
             "UPDATE libros SET " +
-                    "ISBN = ?, " +
-                    "nombre = ?, " +
-                    "autor = ?, " +
-                    "descripcion = ?, " +
-                    "categoria = ?" +
+                    " ISBN = ?, " +
+                    " nombre = ?, " +
+                    " autor = ?, " +
+                    " descripcion = ?, " +
+                    " categoria = ? " +
                     "WHERE idLibro = ?";
 
     private static String SQL_DELETE = "DELETE FROM libros WHERE idLibro = ?";
@@ -122,6 +122,7 @@ public class LibroImpl implements AdmConexion, DAO <Libro, Integer>{
           pst.setInt(6, objeto.getIdLibro());
 
           int resultado = pst.executeUpdate();
+
           if (resultado == 1) {
             System.out.println("Libro actualizado correctamente");
           } else {

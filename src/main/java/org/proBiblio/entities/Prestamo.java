@@ -22,6 +22,13 @@ public class Prestamo {
         this.fechaDevo = fechaDevo;
     }
 
+    public Prestamo() {
+
+    }
+
+    public Prestamo(String fechaEntre, String fechaDevo, String usuario, String libro) {
+    }
+
     public int getIdPrestamo() {return idPrestamo;}
 
     public void setIdPrestamo(int idPrestamo) {this.idPrestamo = idPrestamo;}
@@ -32,7 +39,7 @@ public class Prestamo {
 
     public Usuario getUsuario() {return usuario;}
 
-    public void setUsuario(Usuario usuario) {this.usuario = usuario;}
+    public void setUsuario() {this.usuario = usuario;}
 
     public Libro getLibro() {return libro;}
 
@@ -64,4 +71,19 @@ public class Prestamo {
                 ", fechaDevo=" + fechaDevo +
                 '}';
     }
+
+    public void setFechaEntre(String fechaEntre) {
+    }
+
+    public void setUsuario(int nombre) {
+
+    }
+
+    public void setLibro(int idLibro) {
+
+    }
+
+    public void setFechaDevo(String fechaDevo) {
+    }
+
 }

@@ -18,7 +18,7 @@ public interface AdmConexion {
     String dbUsuario = "root";
 
     // pass bd
-    String dbPass = "eseqele12";
+    String dbPass = "1234";
 
     Connection conn = null;
 
