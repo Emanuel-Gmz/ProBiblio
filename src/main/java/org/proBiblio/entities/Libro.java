@@ -13,11 +13,10 @@ public class Libro{
 
     public Libro(){idLibro = -1;}
 
-    public Libro(String ISBN, String autor, String nombre,String descripcion, Categoria categoria) {
-        super();
+    public Libro(String ISBN, String nombre, String autor, String descripcion, Categoria categoria) {
         this.ISBN = ISBN;
-        this.autor = autor;
         this.nombre = nombre;
+        this.autor = autor;
         this.descripcion = descripcion;
         this.categoria = categoria;
     }

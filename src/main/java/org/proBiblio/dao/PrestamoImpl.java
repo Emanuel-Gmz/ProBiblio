@@ -14,6 +14,7 @@ import java.util.List;
 
 public class PrestamoImpl implements AdmConexion, DAO<Prestamo, Integer> {
 
+  //Todavia no funciona esto
     private Connection conn = null;
 
     private static String SQL_INSERT =

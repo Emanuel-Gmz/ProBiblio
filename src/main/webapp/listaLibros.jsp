@@ -1,50 +1,65 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%-- Incluye el header con Bootstrap CSS --%>
 <%@ include file ="header.jsp" %>
-<%@ page import = "org.proBiblio.dao.LibroImpl" %>
-<%@ page import = "org.proBiblio.entities.Libro" %>
-
-<%@ page import = "java.util.ArrayList" %>
-<%@ page import = "java.util.List" %>
-
-<!-- abro bloque de declaracion java -->
-<%!
-    LibroImpl libroImpl = new LibroImpl();
-    Libro libro = new Libro();
-    List<Libro> listaLibros = libroImpl.getAll();
-%>
 
 
+<jsp:useBean id="libroImpl" class="org.proBiblio.dao.LibroImpl" scope="page" />
+<c:set var="listaLibros" value="${libroImpl.getAll()}" />
 
-<h2> Listado de Libros </h2>
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>ISBN</th>
-        <th>NOMBRE</th>
-        <th>AUTOR</th>
-        <th>DESCRIPCION</th>
-        <th>CATEGORIA</th>
-        <th>Editar</th>
-        <th>Eliminar</th>
-    </tr>
-    </thead>
+<div class="container mt-5">
 
-    <tbody>
-    <% for(Libro a : listaLibros) { %>
-        <tr>
-           <td> <%=a.getIdLibro() %> </td>
-           <td> <%=a.getISBN() %> </td>
-           <td> <%=a.getNombre() %> </td>
-           <td> <%=a.getAutor() %> </td>
-           <td> <%=a.getDescripcion() %> </td>
-           <td> <%=a.getCategoria() %> </td>
-           <td> <a href="formLibros.jsp?operacion=editar&id=<%=a.getIdLibro()%>"> Editar </a></td>
-           <td> <a href="LibroServlet?operacion=eliminar&id=<%=a.getIdLibro()%>"> Eliminar </a></td>
-        </tr>
-    <% } %>
-    </tbody>
-</table>
+    <h2 class="mb-4">CATÁLOGO DE LIBROS</h2>
+
+
+    <a href="formLibros.jsp?operacion=nuevo" class="btn btn-primary mb-4">
+        <i class="fas fa-book-medical"></i> Nuevo Libro
+    </a>
+
+
+    <div class="table-responsive">
+
+        <table class="table table-striped table-hover align-middle">
+            <thead>
+                <tr class="table-dark">
+                    <th>ID</th>
+                    <th>ISBN</th>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Descripción</th>
+                    <th>Categoría</th>
+                    <th class="text-center" colspan="2">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:forEach var="libro" items="${listaLibros}">
+                    <tr>
+                        <td><c:out value="${libro.idLibro}" /></td>
+                        <td><c:out value="${libro.ISBN}" /></td>
+                        <td><c:out value="${libro.nombre}" /></td>
+                        <td><c:out value="${libro.autor}" /></td>
+                        <td><c:out value="${libro.descripcion}" /></td>
+                        <td><c:out value="${libro.categoria}" /></td>
+
+
+                        <td class="text-center">
+                            <a href="formLibros.jsp?operacion=editar&id=${libro.idLibro}"
+                               class="btn btn-sm btn-warning me-2">Editar</a>
+                        </td>
+                        <td class="text-center">
+                            <a href="LibroServlet?operacion=eliminar&id=${libro.idLibro}"
+                               class="btn btn-sm btn-danger"
+                               onclick="return confirm('¿Está seguro de eliminar el libro ${libro.nombre}?');">
+                                Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                </c:forEach>
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
 <%@ include file ="footer.jsp" %>

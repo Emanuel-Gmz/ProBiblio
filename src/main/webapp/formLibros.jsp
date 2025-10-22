@@ -3,83 +3,108 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ include file ="header.jsp" %>
 
-<jsp:useBean id="libro" class="org.proBiblio.entities.Libro" scope="request" />
+
 <jsp:useBean id="libroImpl" class="org.proBiblio.dao.LibroImpl" scope="page" />
 
 <c:if test = "${param.operacion == 'editar'}">
     <c:set var = "idLibro" value = "${Integer.parseInt(param.id)}" />
     <c:set var = "libroEditar" value = "${libroImpl.getById(idLibro)}" />
-    <c:set var="listaLibros" value="${LibroImpl.getAll()}" />
 </c:if>
 
-<h2>
-<c:choose>
-    <c:when test = "${param.operacion == 'editar'}"> Editar Libro </c:when>
-    <c:when test = "${param.operacion == 'eliminar'}"> Eliminar Libro </c:when>
-    <c:otherwise> Nuevo Libro </c:otherwise>
-</c:choose>
-</h2>
+<c:set var="modoOperacion" value="${param.operacion == 'editar' ? 'editar' : 'nuevo'}" />
 
-<form action = "LibroServlet" method = "GET">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
 
-    <label for = "selectLibro"> Seleccionar Libro </label>
-    <select name = "listaLibro" id = "listaLibro" tabindex = "1">
-        <c:forEach var = "a" items = "${listaLibro}">
-            <option value = "${a.idLibro}">
-                <c:if test = "${libroEditar.idLibro == a.idLibro}">selected</c:if>
-                ${a.categoria}
-            </option>
-        </c:forEach>
-    </select>
+            <div class="card shadow-lg">
 
-    <br>
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <c:choose>
+                            <c:when test = "${modoOperacion == 'editar'}"> EDITAR LIBRO </c:when>
+                            <c:otherwise> REGISTRAR NUEVO LIBRO </c:otherwise>
+                        </c:choose>
+                    </h4>
+                </div>
 
-    <input type = "hidden" name = "txtId"
-        value = "${not empty libroEditar.idLibro ? libroEditar.idLibro : -1}"
-    />
+                <div class="card-body">
+                    <form action = "LibroServlet" method = "POST">
 
-    <input type = "hidden" name = "operacion" id = "operacion"
-        value = "${param.operacion == 'editar' ? 'editar' : 'nuevo'}"
-    />
 
-    <label for ="txtISBN"> ISBN </label>
-    <input type = "text" name = "txtISBN" id = "txtISBN" placeholder = "ISBN"
-        value = "${not empty libroEditar.ISBN ? libroEditar.ISBN : ''}"
-    required />
+                        <input type = "hidden" name = "txtId"
+                            value = "${not empty libroEditar.idLibro ? libroEditar.idLibro : -1}"
+                        />
+                        <input type = "hidden" name = "operacion" id = "operacion"
+                            value = "${modoOperacion}"
+                        />
 
-    <br>
 
-    <label for = "txtNombre"> Nombre </label>
-    <input type = "text" name = "txtNombre" id = "txtNombre" placeholder = "Nombre"
-        value = "${not empty libroEditar.nombre ? libroEditar.nombre : ''}"
-    required />
+                        <div class="mb-3">
+                            <label for ="txtISBN" class="form-label">ISBN</label>
+                            <input type = "text" name = "txtISBN" id = "txtISBN"
+                                class="form-control" placeholder = "ISBN"
+                                value = "${not empty libroEditar.ISBN ? libroEditar.ISBN : ''}"
+                            required />
+                        </div>
 
-    <br>
 
-    <label for ="txtAutor"> Autor </label>
-    <input type = "text" name = "txtAutor" id = "txtAutor" placeholder = "Autor"
-        value = "${not empty libroEditar.autor ? libroEditar.autor : ''}"
-    required />
+                        <div class="mb-3">
+                            <label for = "txtNombre" class="form-label">Nombre</label>
+                            <input type = "text" name = "txtNombre" id = "txtNombre"
+                                class="form-control" placeholder = "Nombre del Libro"
+                                value = "${not empty libroEditar.nombre ? libroEditar.nombre : ''}"
+                            required />
+                        </div>
 
-    <br>
 
-    <label for ="txtDescripcion"> Descripcion </label>
-    <input type = "text" name = "txtDescripcion" id = "txtDescripcion" placeholder = "Ingrese la Descripcion"
-        value = "${not empty libroEditar.descripcion ? libroEditar.descripcion : ''}"
-    required />
+                        <div class="mb-3">
+                            <label for ="txtAutor" class="form-label">Autor</label>
+                            <input type = "text" name = "txtAutor" id = "txtAutor"
+                                class="form-control" placeholder = "Autor del Libro"
+                                value = "${not empty libroEditar.autor ? libroEditar.autor : ''}"
+                            required />
+                        </div>
 
-    <br>
 
-        <label for ="txtCategoria"> Categoria </label>
-        <input type = "text" name = "txtCategoria" id = "txtCategoria" placeholder = "Ingrese una Categoria"
-            value = "${not empty libroEditar.categoria ? libroEditar.categoria : ''}"
-        required />
+                        <div class="mb-3">
+                            <label for ="txtDescripcion" class="form-label">Descripción</label>
+                            <textarea name = "txtDescripcion" id = "txtDescripcion"
+                                class="form-control" rows="3" placeholder = "Ingrese la Descripción"
+                            required>${not empty libroEditar.descripcion ? libroEditar.descripcion : ''}</textarea>
+                        </div>
 
-    <input type = "submit" value = "Enviar" />
-</form>
 
-<a href="index.jsp"> Ir a Inicio </a>
+                        <div class="mb-3">
+                            <label for ="txtCategoria" class="form-label">Categoría</label>
+                            <select name="txtCategoria" id="txtCategoria" class="form-select" required>
+                                <option value="" disabled <c:if test="${empty libroEditar.categoria}">selected</c:if>>Seleccione una Categoría</option>
+                                <option value="EDUCATIVO" <c:if test="${libroEditar.categoria == 'EDUCATIVO'}">selected</c:if>>EDUCATIVO</option>
+                                <option value="NOVELA" <c:if test="${libroEditar.categoria == 'NOVELA'}">selected</c:if>>NOVELA</option>
+                                <option value="CIENCIA_FICCION" <c:if test="${libroEditar.categoria == 'CIENCIA_FICCION'}">selected</c:if>>CIENCIA FICCIÓN</option>
+                                <option value="MATEMATICA" <c:if test="${libroEditar.categoria == 'MATEMATICA'}">selected</c:if>>MATEMÁTICA</option>
+                                <option value="FANTASIA" <c:if test="${libroEditar.categoria == 'FANTASIA'}">selected</c:if>>FANTASÍA</option>
+                            </select>
+                        </div>
+
+
+                        <div class="d-grid gap-2 mt-4">
+                            <input type = "submit" class="btn btn-primary"
+                                value = "${modoOperacion == 'editar' ? 'Actualizar Libro' : 'Guardar Libro'}"
+                            />
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer text-center">
+                    <a href="listaLibros.jsp" class="btn btn-secondary btn-sm">
+                        Volver al Catálogo
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <%@ include file ="footer.jsp" %>
-</body>
-</html>

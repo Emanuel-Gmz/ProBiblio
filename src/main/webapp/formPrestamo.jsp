@@ -20,7 +20,7 @@
 </c:choose>
 </h2>
 
-<form action = "PrestamoServlet" method = "GET">
+<form action = "PrestamoServlet" method = "POST">
 
     <label for = "selectPrestamo"> Seleccionar Prestamo </label>
     <select name = "listaPrestamos" id = "listaPrestamo" tabindex = "1">

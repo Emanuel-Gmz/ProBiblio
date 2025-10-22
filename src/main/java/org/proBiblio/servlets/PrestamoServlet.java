@@ -14,6 +14,8 @@ import org.proBiblio.entities.Usuario;
 
 import java.io.IOException;
 
+//Todavia no funciona
+
 public class PrestamoServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -60,11 +62,4 @@ public class PrestamoServlet extends HttpServlet {
 
     }
 
-  /* Supuestamente para actualizar la BD se usa esto
-  @Override
-  protected void doPost (HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-
-  }
-
-   */
 }

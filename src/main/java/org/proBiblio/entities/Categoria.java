@@ -1,5 +1,5 @@
 package org.proBiblio.entities;
 
 public enum Categoria {
-    Fantasia,CienciaFiccion,Misterio,Educativo,Matematica,Fisica,Naturales;
+    FANTASIA,CIENCIA_FICCION,MISTERIO,EDUCATIVO,MATEMATICA,FISICA,NATURALES,NOVELA;
 }

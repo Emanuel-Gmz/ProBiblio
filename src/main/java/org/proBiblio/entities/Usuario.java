@@ -15,11 +15,10 @@ public class Usuario {
     }
 
     public Usuario(String nombre, String apellido, String telefono,String contrasenia,Rol rol) {
-        super();
         this.nombre = nombre;
         this.apellido = apellido;
         this.telefono = telefono;
-        this.apellido = contrasenia;
+        this.contrasenia = contrasenia;
         this.rol = rol;
     }
 

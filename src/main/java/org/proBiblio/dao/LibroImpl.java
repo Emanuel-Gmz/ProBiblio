@@ -2,13 +2,11 @@ package org.proBiblio.dao;
 
 import org.proBiblio.entities.Categoria;
 import org.proBiblio.entities.Libro;
-import org.proBiblio.entities.Usuario;
 import org.proBiblio.interfaces.AdmConexion;
 import org.proBiblio.interfaces.DAO;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class LibroImpl implements AdmConexion, DAO <Libro, Integer>{
@@ -185,7 +183,6 @@ public class LibroImpl implements AdmConexion, DAO <Libro, Integer>{
 
         pst.close();
         rs.close();
-        conn.close();
 
       } catch (SQLException e) {
         throw new RuntimeException(e);
@@ -211,7 +208,6 @@ public class LibroImpl implements AdmConexion, DAO <Libro, Integer>{
 
         pst.close();
         rs.close();
-        conn.close();
       } catch (SQLException e) {
         throw new RuntimeException(e);
       }
