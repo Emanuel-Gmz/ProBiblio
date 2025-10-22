@@ -91,8 +91,7 @@ public class LibroServlet extends HttpServlet {
         try {
           id = Integer.parseInt(idStr);
           libroImpl.delete(id);
-        } catch (NumberFormatException e) {
-          System.err.println("Error de formato en ID al eliminar: " + idStr);
+        } catch (NumberFormatException e) {;
         }
       }
     }

@@ -26,12 +26,12 @@
 
                         <%-- Campo Identificador (Nombre o Teléfono) --%>
                         <div class="mb-3">
-                            <label for="txtIdentificador" class="form-label">Usuario (Nombre o Teléfono)</label>
+                            <label for="txtIdentificador" class="form-label">Usuario</label>
                             <input type="text"
                                    name="txtIdentificador"
                                    id="txtIdentificador"
                                    class="form-control"
-                                   placeholder="Ingrese su nombre o teléfono"
+                                   placeholder="Ingrese su nombre de usuario"
                                    required />
                         </div>
 

@@ -98,12 +98,6 @@
                         </div>
                     </form>
                 </div>
-
-                <div class="card-footer text-center">
-                    <a href="listaUsuarios.jsp" class="btn btn-secondary btn-sm">
-                        Volver al Listado de Usuarios
-                    </a>
-                </div>
             </div>
 
         </div>

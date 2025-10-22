@@ -6,9 +6,9 @@
 
                 <div class="col-md-4 mb-3">
                     <h5 class="text-primary border-bottom border-primary pb-2">Sobre ProBiblio</h5>
-                    <p class="text-secondary">Tu plataforma bibliotecaria y catalogo en línea.</p>
+                    <p class="text-secondary">Tu plataforma bibliotecaria en línea.</p>
                     <p class="mb-1">Email: contacto@correo.com</p>
-                    <p>Teléfono: +54 3482 348200</p>
+                    <p>Teléfono: +54 3482 3482</p>
                 </div>
 
                 <div class="col-md-4 mb-3">
@@ -21,7 +21,7 @@
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <h5 class="text-primary border-bottom border-primary pb-2">Síguenos</h5>
+                    <h5 class="text-primary border-bottom border-primary pb-2">Siguenos</h5>
                     <a href="#" class="btn btn-outline-light btn-sm me-2 mb-2">Facebook</a>
                     <a href="#" class="btn btn-outline-light btn-sm me-2 mb-2">Twitter</a>
                     <a href="#" class="btn btn-outline-light btn-sm mb-2">Instagram</a>
