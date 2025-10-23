@@ -22,7 +22,7 @@
                     <span class="text-white">¡Bienvenido de nuevo, ${sessionScope.usuarioLogueado.nombre}!</span>
                 </c:when>
                 <c:otherwise>
-                    <a class="btn btn-warning btn-lg me-2" href="login.jsp" role="button">
+                    <a class="btn btn-primary btn-lg me-2" href="login.jsp" role="button">
                         Iniciar Sesión
                     </a>
                     <a class="btn btn-outline-light btn-lg" href="formUsuarios.jsp" role="button">
@@ -43,7 +43,7 @@
         <div class="col-lg-4 mb-4">
             <div class="card h-100 shadow">
                 <div class="card-body">
-                    <h3 class="card-title text-primary"> Visita el Catálogo</h3>
+                    <h3 class="card-title text-dark"> Visita el Catálogo</h3>
                     <p class="card-text">Descubre nuevos títulos en diferentes categorías.</p>
                     <a href="listaLibros.jsp" class="btn btn-sm btn-outline-primary">Ver Libros</a>
                 </div>
@@ -79,24 +79,24 @@
 
 
         <div class="carousel-item active">
-          <img src="images/book_slide_1.jpg" class="d-block w-100" alt="Libro 1" style="height: 400px; object-fit: cover;">
-          <div class="carousel-caption d-none d-md-block bg-dark opacity-75">
-            <h5>Ciencia Ficción Clásica</h5>
-            <p>Descubre los pilares del género.</p>
+          <img src="imagenes/cienciaficcion.jpg" class="d-block w-90" alt="Libro de Ciencia Ficcion" style="height: 400px; object-fit: cover;">
+          <div class="carousel-caption d-none d-md-block bg-dark op1acity-75">
+            <h5>Ciencia Ficción </h5>
+            <p>Descubre los libros de ciencia ficcion mas locos.</p>
           </div>
         </div>
         <div class="carousel-item">
-          <img src="images/book_slide_2.jpg" class="d-block w-100" alt="Libro 2" style="height: 400px; object-fit: cover;">
+          <img src="imagenes/Novela.jpg" class="d-block w-90" alt="Libro de Historia" style="height: 400px; object-fit: cover;">
           <div class="carousel-caption d-none d-md-block bg-dark opacity-75">
-            <h5>Novelas Históricas</h5>
-            <p>Viaja a través del tiempo con estos relatos.</p>
+            <h5>Libros de Historia</h5>
+            <p>Enterate de tu historia con estos libros.</p>
           </div>
         </div>
         <div class="carousel-item">
-          <img src="images/book_slide_3.jpg" class="d-block w-100" alt="Libro 3" style="height: 400px; object-fit: cover;">
+          <img src="imagenes/librojava.jpg" class="d-block w-90" alt="Libro de Java 17" style="height: 400px; object-fit: cover;">
           <div class="carousel-caption d-none d-md-block bg-dark opacity-75">
             <h5>Recién Añadidos</h5>
-            <p>Lo nuevo en el catálogo de ProBiblio.</p>
+            <p>Lo mas nuevo en ProBiblio.</p>
           </div>
         </div>
       </div>

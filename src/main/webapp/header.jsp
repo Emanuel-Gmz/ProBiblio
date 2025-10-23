@@ -24,9 +24,9 @@
             <div class="container-fluid">
 
 
-                <a class="navbar-brand" href="${pageContext.request.contextPath}/index.jsp">
+                <a class="navbar-brand" href="index.jsp">
 
-                    <img src="${pageContext.request.contextPath}/imagenes/LogoBiblioteca.png"
+                    <img src="imagenes/LogoBiblioteca.png"
                          alt="Logo ProBiblio"
                          class="navbar-logo me-2">
                     <span class="fs-4 fw-bold">ProBiblio</span>
@@ -50,10 +50,10 @@
                             <a class="btn btn-outline-secondary" href="listaLibros.jsp">Catalogo</a>
                         </li>
                         <li class="nav-item me-2">
-                            <a class="btn btn-success" href="login.jsp">Login</a>
+                            <a class="btn btn-success text-dark" href="login.jsp">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-info text-white" href="formUsuarios.jsp">Register</a>
+                            <a class="btn btn-info text-dark" href="formUsuarios.jsp">Register</a>
                         </li>
                     </ul>
                 </div>
