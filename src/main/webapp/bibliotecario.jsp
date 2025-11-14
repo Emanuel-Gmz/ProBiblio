@@ -2,15 +2,30 @@
 <%@ page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
+
+<c:choose>
+    <c:when test="${empty sessionScope.usuarioLogueado}">
+        <c:set var="mensajeError" value="Debe iniciar sesión para acceder a esta página." scope="request" />
+        <jsp:forward page="login.jsp" />
+    </c:when>
+
+    <c:when test="${sessionScope.rol != 'ADMIN' && sessionScope.rol != 'BIBLIOTECARIO'}">
+        <c:set var="mensajeError" value="No tiene permisos para acceder a esta página." scope="request" />
+        <jsp:forward page="index.jsp" />
+    </c:when>
+</c:choose>
+
+
+
 <c:set var="usuario" value="${sessionScope.usuarioLogueado}" />
-<c:set var="rol" value="${sessionScope.rol}" />
+
 
 <%@ include file ="header.jsp" %>
 
 <div class="container mt-5">
     <div class="alert alert-info text-center" role="alert">
         <h4 class="alert-heading">Panel de Bibliotecario: ${usuario.nombre}</h4>
-        <p>Tu rol es: <strong>${rol}</strong>. Concéntrate en el inventario y préstamos.</p>
+        <p>Tu rol es: <strong>${sessionScope.rol}</strong>. Concéntrate en el inventario y préstamos.</p>
     </div>
 
     <div class="row mt-4">

@@ -61,9 +61,26 @@ public class UsuarioServlet extends HttpServlet {
     }
 
 
-    if ("nuevo".equals(operacion)) {
-        Usuario usuarioNuevo = new Usuario(nombre, apellido, telefono, contrasenia, rol);
-        usuarioImpl.insert(usuarioNuevo);
+    if (operacion.equals("nuevo")) {
+
+      Usuario usuario = new Usuario();
+      usuario.setNombre(req.getParameter("txtNombre"));
+      usuario.setApellido(req.getParameter("txtApellido"));
+      usuario.setTelefono(req.getParameter("txtTelefono"));
+
+      String rolParam = req.getParameter("txtRol");
+
+
+      String rolAsignado = (rolParam == null) ? "USUARIO" : rolParam;
+
+      usuario.setRol(Rol.valueOf(rolAsignado));
+
+
+
+      usuario.setContrasenia(contrasenia);
+
+      usuarioImpl.insert(usuario);
+
 
     }
 

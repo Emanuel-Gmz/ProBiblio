@@ -16,15 +16,23 @@
                 <div class="card-body p-4">
 
 
+                    <c:if test="${not empty mensajeExito}">
+                        <div class="alert alert-success" role="alert">
+                            ${mensajeExito}
+                        </div>
+                    </c:if>
+
+
                     <c:if test="${not empty mensajeError}">
                         <div class="alert alert-danger" role="alert">
                             ${mensajeError}
                         </div>
                     </c:if>
 
-                    <form action="LoginServlet" method="POST">
 
-                        <%-- Campo Identificador (Nombre o Teléfono) --%>
+                    <form action="${pageContext.request.contextPath}/LoginServlet" method="POST">
+
+
                         <div class="mb-3">
                             <label for="txtIdentificador" class="form-label">Usuario</label>
                             <input type="text"

@@ -1,5 +1,7 @@
 package org.proBiblio.dao;
 
+
+import org.proBiblio.util.PasswordUtil;
 import org.proBiblio.entities.Rol;
 import org.proBiblio.entities.Usuario;
 import org.proBiblio.interfaces.AdmConexion;
@@ -16,21 +18,25 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
       "INSERT INTO usuarios (nombre, apellido, telefono, contrasenia, rol) " +
           "VALUES (?, ?, ?, ?, ?)";
 
-
   private static String SQL_UPDATE =
       "UPDATE usuarios SET " +
           "nombre = ?, " +
           "apellido = ?, " +
           "telefono = ?, " +
-          "contrasenia = ?, " +
           "rol = ? " +
           "WHERE idUsuario = ?";
+
+  private static String SQL_UPDATE_PASSWORD =
+      "UPDATE usuarios SET contrasenia = ? WHERE idUsuario = ?";
 
   private static String SQL_DELETE = "DELETE FROM usuarios WHERE idUsuario = ?";
   private static String SQL_GETALL = "SELECT * FROM usuarios ORDER BY nombre";
   private static String SQL_GETBYID = "SELECT * FROM usuarios WHERE idUsuario = ?";
+
+  private static String SQL_GETBYNOMBRE = "SELECT * FROM usuarios WHERE nombre = ?";
+
   private static String SQL_EXISTSBYID = "SELECT 1 FROM usuarios WHERE idUsuario = ?";
-  private static String SQL_LOGIN = "SELECT * FROM usuarios WHERE nombre = ? AND contrasenia = ?";
+
 
 
   @Override
@@ -50,7 +56,7 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
         usuario.setNombre(rs.getString("nombre"));
         usuario.setApellido(rs.getString("apellido"));
         usuario.setTelefono(rs.getString("telefono"));
-        usuario.setContrasenia(rs.getString("contrasenia"));
+        usuario.setContrasenia(rs.getString("contrasenia")); // Se obtiene el HASH
         usuario.setRol(Rol.valueOf(rs.getString("rol")));
 
         lista.add(usuario);
@@ -79,11 +85,13 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
       pst.setString(1, objeto.getNombre());
       pst.setString(2, objeto.getApellido());
       pst.setString(3, objeto.getTelefono());
-      pst.setString(4, objeto.getContrasenia());
+
+      String claveHash = PasswordUtil.hashPassword(objeto.getContrasenia());
+      pst.setString(4, claveHash);
+
       pst.setString(5, objeto.getRol().toString());
 
       int resultado = pst.executeUpdate();
-
 
       rs = pst.getGeneratedKeys();
       if (rs.next()) {
@@ -94,7 +102,10 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
       rs.close();
       conn.close();
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new RuntimeException("Error SQL al insertar usuario: " + e.getMessage(), e);
+    } catch (IllegalArgumentException e) {
+      System.err.println("Error al hashear contraseña para " + objeto.getNombre() + ": " + e.getMessage());
+      throw new RuntimeException("Error en el proceso de hasheo", e);
     }
   }
 
@@ -106,22 +117,42 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
       try {
         PreparedStatement pst = conn.prepareStatement(SQL_UPDATE);
 
-
         pst.setString(1, objeto.getNombre());
         pst.setString(2, objeto.getApellido());
         pst.setString(3, objeto.getTelefono());
-        pst.setString(4, objeto.getContrasenia());
-        pst.setString(5, objeto.getRol().toString());
-        pst.setInt(6, objeto.getIdUsuario());
+        pst.setString(4, objeto.getRol().toString());
+        pst.setInt(5, objeto.getIdUsuario()); // El ID va al final
 
         int resultado = pst.executeUpdate();
-
 
         pst.close();
         conn.close();
       } catch (SQLException e) {
         System.out.println("Error al actualizar el usuario. " + e.getMessage());
       }
+    }
+  }
+
+  public void updatePassword(Integer idUsuario, String nuevaClavePlana) {
+    conn = obtenerConexion();
+    try {
+      PreparedStatement pst = conn.prepareStatement(SQL_UPDATE_PASSWORD);
+
+
+      String claveHash = PasswordUtil.hashPassword(nuevaClavePlana);
+
+      pst.setString(1, claveHash);
+      pst.setInt(2, idUsuario);
+
+      pst.executeUpdate();
+      System.out.println("Contraseña actualizada para: " + idUsuario);
+
+      pst.close();
+      conn.close();
+    } catch (SQLException e) {
+      System.out.println("Error al actualizar la contraseña: " + e.getMessage());
+    } catch (IllegalArgumentException e) {
+      System.err.println("Error al hashear nueva contraseña para " + idUsuario + ": " + e.getMessage());
     }
   }
 
@@ -141,7 +172,6 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
       } else {
         System.out.println("No se pudo eliminar el usuario");
       }
-
 
       conn.commit();
       pst.close();
@@ -182,6 +212,37 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
     return usuario;
   }
 
+  public Usuario getByNombre(String nombre) {
+    conn = obtenerConexion();
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    Usuario usuario = null;
+
+    try {
+      pst = conn.prepareStatement(SQL_GETBYNOMBRE);
+      pst.setString(1, nombre);
+      rs = pst.executeQuery();
+
+      if (rs.next()) {
+        usuario = new Usuario();
+        usuario.setIdUsuario(rs.getInt("idUsuario"));
+        usuario.setNombre(rs.getString("nombre"));
+        usuario.setApellido(rs.getString("apellido"));
+        usuario.setTelefono(rs.getString("telefono"));
+        usuario.setContrasenia(rs.getString("contrasenia"));
+        usuario.setRol(Rol.valueOf(rs.getString("rol")));
+      }
+
+      pst.close();
+      rs.close();
+    } catch (SQLException e) {
+      System.err.println("Error al buscar usuario por nombre: " + e.getMessage());
+      throw new RuntimeException(e);
+    }
+    return usuario;
+  }
+
+
   @Override
   public boolean existsById(Integer id) {
     conn = obtenerConexion();
@@ -206,35 +267,6 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
     return existe;
   }
 
-  public Usuario login(String nombre, String contrasenia) {
-    Connection conn = null;
-    PreparedStatement pst = null;
-    ResultSet rs = null;
-    Usuario usuario = null;
-
-    try {
-      conn = obtenerConexion();
-      pst = conn.prepareStatement(SQL_LOGIN);
-
-
-      pst.setString(1, nombre);
-      pst.setString(2, contrasenia);
-
-      rs = pst.executeQuery();
-
-      if (rs.next()) {
-        usuario = new Usuario();
-        usuario.setIdUsuario(rs.getInt("idUsuario"));
-        usuario.setNombre(rs.getString("nombre"));
-        usuario.setRol(Rol.valueOf(rs.getString("rol")));
-
-      }
-    } catch (SQLException e) {
-      System.err.println("Error de login en DAO: " + e.getMessage());
-      throw new RuntimeException(e);
-    }
-    return usuario;
-  }
 
 
   @Override

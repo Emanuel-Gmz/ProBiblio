@@ -1,6 +1,27 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+
+<c:choose>
+    <c:when test = "${param.operacion == 'editar'}">
+        <c:if test="${empty sessionScope.usuarioLogueado}">
+            <c:set var="mensajeError" value="Debe iniciar sesión como Admin para editar usuarios." scope="request" />
+            <jsp:forward page="login.jsp" />
+        </c:if>
+        <c:if test="${sessionScope.rol != 'ADMIN'}">
+            <c:set var="mensajeError" value="No tiene permisos para administrar usuarios." scope="request" />
+            <jsp:forward page="index.jsp" />
+        </c:if>
+    </c:when>
+
+    <c:otherwise>
+        <c:if test="${sessionScope.rol == 'USUARIO' || sessionScope.rol == 'BIBLIOTECARIO'}">
+            <c:redirect url="index.jsp" />
+        </c:if>
+    </c:otherwise>
+</c:choose>
+
+
 <%@ include file ="header.jsp" %>
 
 <jsp:useBean id="usuarioImpl" class="org.proBiblio.dao.UsuarioImpl" scope="page" />
@@ -29,7 +50,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form action = "UsuarioServlet" method = "POST">
+                    <form action = "${pageContext.request.contextPath}/UsuarioServlet" method = "POST">
 
 
                         <input type = "hidden" name = "txtId"
@@ -41,9 +62,9 @@
 
 
                         <div class="mb-3">
-                            <label for ="txtNombre" class="form-label">Nombre</label>
+                            <label for ="txtNombre" class="form-label">Nombre de Usuario</label>
                             <input type = "text" name = "txtNombre" id = "txtNombre"
-                                class="form-control" placeholder = "Nombre"
+                                class="form-control" placeholder = "Nombre de usuario (para login)"
                                 value = "${not empty usuarioEditar.nombre ? usuarioEditar.nombre : ''}"
                             required />
                         </div>
@@ -75,20 +96,21 @@
                                 <c:if test="${modoOperacion == 'nuevo'}">required</c:if>
                             />
                             <c:if test="${modoOperacion == 'editar'}">
-                                <small class="form-text text-muted">Deja vacío para mantener la contraseña actual.</small>
+                                <small class="form-text text-muted">Mantener la contraseña actual.</small>
                             </c:if>
                         </div>
 
-
-                        <div class="mb-3">
-                            <label for ="txtRol" class="form-label">Rol</label>
-                            <select name="txtRol" id="txtRol" class="form-select" required>
-                                <option value="" disabled <c:if test="${empty usuarioEditar.rol}">selected</c:if>>Seleccione un Rol</option>
-                                <option value="ADMIN" <c:if test="${usuarioEditar.rol == 'ADMIN'}">selected</c:if>>ADMIN</option>
-                                <option value="USUARIO" <c:if test="${usuarioEditar.rol == 'USUARIO'}">selected</c:if>>USUARIO</option>
-                                <option value="BIBLIOTECARIO" <c:if test="${usuarioEditar.rol == 'BIBLIOTECARIO'}">selected</c:if>>BIBLIOTECARIO</option>
-                            </select>
-                        </div>
+                        <c:if test="${sessionScope.rol == 'ADMIN'}">
+                            <div class="mb-3">
+                                <label for ="txtRol" class="form-label">Rol</label>
+                                <select name="txtRol" id="txtRol" class="form-select" required>
+                                    <option value="" disabled <c:if test="${empty usuarioEditar.rol}">selected</c:if>>Seleccione un Rol</option>
+                                    <option value="ADMIN" <c:if test="${usuarioEditar.rol == 'ADMIN'}">selected</c:if>>ADMIN</option>
+                                    <option value="USUARIO" <c:if test="${usuarioEditar.rol == 'USUARIO'}">selected</c:if>>USUARIO</option>
+                                    <option value="BIBLIOTECARIO" <c:if test="${usuarioEditar.rol == 'BIBLIOTECARIO'}">selected</c:if>>BIBLIOTECARIO</option>
+                                </select>
+                            </div>
+                        </c:if>
 
 
                         <div class="d-grid gap-2 mt-4">

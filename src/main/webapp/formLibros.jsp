@@ -1,6 +1,20 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+
+<c:choose>
+    <c:when test="${empty sessionScope.usuarioLogueado}">
+        <c:set var="mensajeError" value="Debe iniciar sesión para acceder a esta página." scope="request" />
+        <jsp:forward page="login.jsp" />
+    </c:when>
+
+    <c:when test="${sessionScope.rol != 'ADMIN' && sessionScope.rol != 'BIBLIOTECARIO'}">
+        <c:set var="mensajeError" value="No tiene permisos suficientes para realizar esta acción." scope="request" />
+        <jsp:forward page="listaLibros.jsp" />
+    </c:when>
+</c:choose>
+
+
 <%@ include file ="header.jsp" %>
 
 
@@ -29,7 +43,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form action = "LibroServlet" method = "POST">
+                    <form action = "${pageContext.request.contextPath}/LibroServlet" method = "POST">
 
 
                         <input type = "hidden" name = "txtId"
@@ -97,7 +111,7 @@
                 </div>
 
                 <div class="card-footer text-center">
-                    <a href="listaLibros.jsp" class="btn btn-secondary btn-sm">
+                    <a href="${pageContext.request.contextPath}/listaLibros.jsp" class="btn btn-secondary btn-sm">
                         Volver al Catálogo
                     </a>
                 </div>

@@ -10,12 +10,20 @@
 
 <div class="container mt-5">
 
+    <c:if test="${not empty mensajeError}">
+        <div class="alert alert-danger" role="alert">
+            ${mensajeError}
+        </div>
+    </c:if>
+
+
     <h2 class="mb-4">CATÁLOGO DE LIBROS</h2>
+    <c:if test="${sessionScope.rol == 'ADMIN' || sessionScope.rol == 'BIBLIOTECARIO'}">
+        <a href="${pageContext.request.contextPath}/formLibros.jsp?operacion=nuevo" class="btn btn-primary mb-4">
+            <i class="fas fa-book-medical"></i> Nuevo Libro
+        </a>
+    </c:if>
 
-
-    <a href="formLibros.jsp?operacion=nuevo" class="btn btn-primary mb-4">
-        <i class="fas fa-book-medical"></i> Nuevo Libro
-    </a>
 
 
     <div class="table-responsive">
@@ -29,7 +37,10 @@
                     <th>Autor</th>
                     <th>Descripción</th>
                     <th>Categoría</th>
-                    <th class="text-center" colspan="2">Acciones</th>
+
+                    <c:if test="${sessionScope.rol == 'ADMIN' || sessionScope.rol == 'BIBLIOTECARIO'}">
+                        <th class="text-center" colspan="2">Acciones</th>
+                    </c:if>
                 </tr>
             </thead>
             <tbody>
@@ -43,17 +54,19 @@
                         <td><c:out value="${libro.categoria}" /></td>
 
 
-                        <td class="text-center">
-                            <a href="formLibros.jsp?operacion=editar&id=${libro.idLibro}"
-                               class="btn btn-sm btn-warning me-2">Editar</a>
-                        </td>
-                        <td class="text-center">
-                            <a href="LibroServlet?operacion=eliminar&id=${libro.idLibro}"
-                               class="btn btn-sm btn-danger"
-                               onclick="return confirm('¿Está seguro de eliminar el libro ${libro.nombre}?');">
-                                Eliminar
-                            </a>
-                        </td>
+                        <c:if test="${sessionScope.rol == 'ADMIN' || sessionScope.rol == 'BIBLIOTECARIO'}">
+                            <td class="text-center">
+                                <a href="${pageContext.request.contextPath}/formLibros.jsp?operacion=editar&id=${libro.idLibro}"
+                                   class="btn btn-sm btn-warning me-2">Editar</a>
+                            </td>
+                            <td class="text-center">
+                                <a href="${pageContext.request.contextPath}/LibroServlet?operacion=eliminar&id=${libro.idLibro}"
+                                   class="btn btn-sm btn-danger"
+                                   onclick="return confirm('¿Está seguro de eliminar el libro ${libro.nombre}?');">
+                                    Eliminar
+                                </a>
+                            </td>
+                        </c:if>
                     </tr>
                 </c:forEach>
 
