@@ -1,65 +1,91 @@
 package org.proBiblio.servlets;
 
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.proBiblio.dao.LibroImpl;
+import jakarta.servlet.http.HttpSession;
 import org.proBiblio.dao.PrestamoImpl;
-import org.proBiblio.entities.Categoria;
 import org.proBiblio.entities.Libro;
 import org.proBiblio.entities.Prestamo;
 import org.proBiblio.entities.Usuario;
 
 import java.io.IOException;
-
-//Todavia no funciona
+import java.sql.Date;
 
 public class PrestamoServlet extends HttpServlet {
-    @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
-        String fechaEntre = "";
-        String fechaDevo = "";
-        String usuario = null;
-        String libro = null;
-        String operacion = "nuevo";
-        int id = -1;
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    procesar(req, resp);
+  }
 
-        operacion = req.getParameter("operacion");
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    procesar(req, resp);
+  }
 
-        if ("editar".equals(operacion) || "nuevo".equals(operacion)) {
-            fechaEntre = req.getParameter("txtFEntre");
-            fechaDevo = req.getParameter("txtFDebo");
-            usuario = req.getParameter("txtUsuario");
-            libro = req.getParameter("txtLibro");
-        } else {
-            id = Integer.parseInt(req.getParameter("id"));
-        }
+  private void procesar(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    String operacion = req.getParameter("operacion");
+    PrestamoImpl prestamoDAO = new PrestamoImpl();
 
-        PrestamoImpl prestamoImpl = new PrestamoImpl();
-        if ("nuevo".equals(operacion)) {
-            Prestamo prestamoNuevo = new Prestamo(fechaEntre, fechaDevo, usuario, libro);
-            prestamoImpl.insert(prestamoNuevo);
-        }
+    HttpSession session = req.getSession();
+    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
 
-        if ("editar".equals(operacion)) {
-            Prestamo prestamoEditar = prestamoImpl.getById(id);
-            prestamoEditar.setFechaEntre(fechaEntre);
-            prestamoEditar.setFechaDevo(fechaDevo);
-            prestamoEditar.setUsuario(Integer.parseInt(usuario));
-            prestamoEditar.setLibro(Integer.parseInt(libro));
-            prestamoImpl.update(prestamoEditar);
-        }
-
-        if ("eliminar".equals(operacion)) {
-            prestamoImpl.delete(id);
-        }
-
-        RequestDispatcher rd = req.getRequestDispatcher("/index.jsp");
-        rd.forward(req, res);
-
+    if (usuarioLogueado == null) {
+      resp.sendRedirect(req.getContextPath() + "/login.jsp");
+      return;
     }
 
+    if ("solicitar".equals(operacion)) {
+      try {
+        String idLibroStr = req.getParameter("idLibro");
+        if (idLibroStr != null) {
+          int idLibro = Integer.parseInt(idLibroStr);
+          int idUsuario = usuarioLogueado.getIdUsuario();
+
+          Prestamo p = new Prestamo();
+          p.setFechaPrestamo(new Date(System.currentTimeMillis()));
+          p.setEstado("ACTIVO");
+
+          Usuario u = new Usuario();
+          u.setIdUsuario(idUsuario);
+          p.setUsuario(u);
+
+          Libro l = new Libro();
+          l.setIdLibro(idLibro);
+          p.setLibro(l);
+
+          prestamoDAO.registrarPrestamo(p);
+
+          resp.sendRedirect(req.getContextPath() + "/listaPrestamos.jsp?mensajeExito=Prestamo solicitado correctamente");
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+        resp.sendRedirect(req.getContextPath() + "/listaLibros.jsp?mensajeError=Error al solicitar prestamo");
+      }
+
+    } else if ("devolver".equals(operacion)) {
+
+
+      String rol = (String) session.getAttribute("rol");
+
+      if ("ADMIN".equals(rol) || "BIBLIOTECARIO".equals(rol)) {
+        try {
+          int idPrestamo = Integer.parseInt(req.getParameter("idPrestamo"));
+          prestamoDAO.registrarDevolucion(idPrestamo);
+
+          resp.sendRedirect(req.getContextPath() + "/listaPrestamos.jsp?mensajeExito=Devolucion registrada correctamente");
+        } catch (Exception e) {
+          e.printStackTrace();
+          resp.sendRedirect(req.getContextPath() + "/listaPrestamos.jsp?mensajeError=Error al registrar devolucion");
+        }
+      } else {
+        resp.sendRedirect(req.getContextPath() + "/index.jsp");
+      }
+
+    } else {
+      resp.sendRedirect(req.getContextPath() + "/index.jsp");
+    }
+  }
 }

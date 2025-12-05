@@ -25,7 +25,7 @@
 <div class="container mt-5">
     <div class="alert alert-info text-center" role="alert">
         <h4 class="alert-heading">Panel de Bibliotecario: ${usuario.nombre}</h4>
-        <p>Tu rol es: <strong>${sessionScope.rol}</strong>. Concéntrate en el inventario y préstamos.</p>
+        <p>Tu rol es: <strong>${sessionScope.rol}</strong>.</p>
     </div>
 
     <div class="row mt-4">

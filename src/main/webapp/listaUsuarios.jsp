@@ -12,7 +12,6 @@
 
     <c:when test="${sessionScope.rol != 'ADMIN'}">
         <c:set var="mensajeError" value="No tiene permisos suficientes para administrar usuarios." scope="request" />
-        <%-- Lo mandamos al index, que es una página segura --%>
         <jsp:forward page="index.jsp" />
     </c:when>
 </c:choose>
@@ -39,6 +38,8 @@
     </c:if>
 
 
+    <h2 class="mb-4">LISTADO DE USUARIOS</h2>
+
 
     <a href="${pageContext.request.contextPath}/formUsuarios.jsp?operacion=nuevo" class="btn btn-primary mb-4">
         <i class="fas fa-user-plus"></i> Nuevo Usuario
@@ -54,9 +55,10 @@
                     <th>ID</th>
                     <th>Nombre</th>
                     <th>Apellido</th>
+                    <th>Email</th>
                     <th>Teléfono</th>
                     <th>Rol</th>
-                    <th class="text-center" colspan="2">Acciones</th> <%-- Colspan es 2 --%>
+                    <th class="text-center" colspan="2">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -65,10 +67,10 @@
                         <td>${usuario.idUsuario}</td>
                         <td>${usuario.nombre}</td>
                         <td>${usuario.apellido}</td>
+                        <td>${usuario.email}</td>
                         <td>${usuario.telefono}</td>
                         <td>${usuario.rol}</td>
 
-                        <%-- CAMBIO 4: Enlace corregido --%>
                         <td class="text-center">
                             <a href="${pageContext.request.contextPath}/formUsuarios.jsp?operacion=editar&id=${usuario.idUsuario}"
                                class="btn btn-sm btn-warning me-2">Editar</a>
@@ -88,8 +90,7 @@
                 </c:forEach>
                 <c:if test="${empty listaUsuarios}">
                     <tr>
-
-                        <td colspan="6" class="text-center">No hay usuarios registrados.</td>
+                        <td colspan="7" class="text-center">No hay usuarios registrados.</td>
                     </tr>
                 </c:if>
             </tbody>

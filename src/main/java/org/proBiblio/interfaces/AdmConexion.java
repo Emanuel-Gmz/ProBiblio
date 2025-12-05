@@ -22,6 +22,10 @@ public interface AdmConexion {
 
     Connection conn = null;
 
+    //UPDATE usuarios
+    //SET rol = 'ADMIN'
+    //WHERE email = 'admin@ejemplo.com';
+
     try {
       Class.forName(dbDriver);
 

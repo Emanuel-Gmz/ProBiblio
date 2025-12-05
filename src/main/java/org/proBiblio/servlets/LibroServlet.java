@@ -75,7 +75,7 @@ public class LibroServlet extends HttpServlet {
             libroImpl.update(libroEditar);
           }
         } catch (NumberFormatException e) {
-          System.err.println("Error de formato en ID al editar: " + idStr);
+          System.out.println("Error de formato en ID al editar: " + idStr);
         }
       }
     }

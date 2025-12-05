@@ -21,11 +21,9 @@
     </c:otherwise>
 </c:choose>
 
-
 <%@ include file ="header.jsp" %>
 
 <jsp:useBean id="usuarioImpl" class="org.proBiblio.dao.UsuarioImpl" scope="page" />
-
 
 <c:if test = "${param.operacion == 'editar'}">
     <c:set var = "idUsuario" value = "${Integer.parseInt(param.id)}" />
@@ -52,14 +50,12 @@
                 <div class="card-body">
                     <form action = "${pageContext.request.contextPath}/UsuarioServlet" method = "POST">
 
-
                         <input type = "hidden" name = "txtId"
                             value = "${not empty usuarioEditar.idUsuario ? usuarioEditar.idUsuario : -1}"
                         />
                         <input type = "hidden" name = "operacion" id = "operacion"
                             value = "${modoOperacion}"
                         />
-
 
                         <div class="mb-3">
                             <label for ="txtNombre" class="form-label">Nombre de Usuario</label>
@@ -69,12 +65,19 @@
                             required />
                         </div>
 
-
                         <div class="mb-3">
                             <label for = "txtApellido" class="form-label">Apellido</label>
                             <input type = "text" name = "txtApellido" id = "txtApellido"
                                 class="form-control" placeholder = "Apellido"
                                 value = "${not empty usuarioEditar.apellido ? usuarioEditar.apellido : ''}"
+                            required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for ="txtEmail" class="form-label">Correo Electrónico</label>
+                            <input type = "email" name = "txtEmail" id = "txtEmail"
+                                class="form-control" placeholder = "ejemplo@correo.com"
+                                value = "${not empty usuarioEditar.email ? usuarioEditar.email : ''}"
                             required />
                         </div>
 
@@ -87,7 +90,6 @@
                             required />
                         </div>
 
-
                         <div class="mb-3">
                             <label for ="txtContrasenia" class="form-label">Contraseña</label>
                             <input type = "password" name = "txtContrasenia" id = "txtContrasenia"
@@ -96,7 +98,7 @@
                                 <c:if test="${modoOperacion == 'nuevo'}">required</c:if>
                             />
                             <c:if test="${modoOperacion == 'editar'}">
-                                <small class="form-text text-muted">Mantener la contraseña actual.</small>
+                                <small class="form-text text-muted">Deja vacío para mantener la contraseña actual.</small>
                             </c:if>
                         </div>
 
@@ -111,7 +113,6 @@
                                 </select>
                             </div>
                         </c:if>
-
 
                         <div class="d-grid gap-2 mt-4">
                             <input type = "submit" class="btn btn-success"

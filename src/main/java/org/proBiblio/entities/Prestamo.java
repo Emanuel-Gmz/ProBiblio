@@ -1,89 +1,112 @@
 package org.proBiblio.entities;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.Objects;
 
 public class Prestamo {
-    private int idPrestamo;
-    private Date fechaEntre;
-    private Usuario usuario;
-    private Libro libro;
-    private Date fechaDevo;
+  private int idPrestamo;
+  private Date fechaPrestamo;
+  private Date fechaDevolucion;
+  private String estado;
 
-    public Prestamo(int idPrestamo) {
-        this.idPrestamo = -1;
-    }
 
-    public Prestamo(int idPrestamo, Date fechaEntre, Usuario usuario, Libro libro, Date fechaDevo) {
-        this.idPrestamo = idPrestamo;
-        this.fechaEntre = fechaEntre;
-        this.usuario = usuario;
-        this.libro = libro;
-        this.fechaDevo = fechaDevo;
-    }
+  private Usuario usuario;
+  private Libro libro;
 
-    public Prestamo() {
 
-    }
+  public Prestamo() {
+    this.idPrestamo = -1;
+  }
 
-    public Prestamo(String fechaEntre, String fechaDevo, String usuario, String libro) {
-    }
 
-    public int getIdPrestamo() {return idPrestamo;}
+  public Prestamo(int idPrestamo, Date fechaPrestamo, Date fechaDevolucion, String estado, Usuario usuario, Libro libro) {
+    this.idPrestamo = idPrestamo;
+    this.fechaPrestamo = fechaPrestamo;
+    this.fechaDevolucion = fechaDevolucion;
+    this.estado = estado;
+    this.usuario = usuario;
+    this.libro = libro;
+  }
 
-    public void setIdPrestamo(int idPrestamo) {this.idPrestamo = idPrestamo;}
 
-    public Date getFechaEntre() {return fechaEntre;}
 
-    public void setFechaEntre(Date fechaEntre) {this.fechaEntre = fechaEntre;}
+  public int getIdPrestamo() {
+    return idPrestamo;
+  }
 
-    public Usuario getUsuario() {return usuario;}
+  public void setIdPrestamo(int idPrestamo) {
+    this.idPrestamo = idPrestamo;
+  }
 
-    public void setUsuario() {this.usuario = usuario;}
+  public Date getFechaPrestamo() {
+    return fechaPrestamo;
+  }
 
-    public Libro getLibro() {return libro;}
+  public void setFechaPrestamo(Date fechaPrestamo) {
+    this.fechaPrestamo = fechaPrestamo;
+  }
 
-    public void setLibro(Libro libro) {this.libro = libro;}
+  public Date getFechaDevolucion() {
+    return fechaDevolucion;
+  }
 
-    public Date getFechaDevo() {return fechaDevo;}
+  public void setFechaDevolucion(Date fechaDevolucion) {
+    this.fechaDevolucion = fechaDevolucion;
+  }
 
-    public void setFechaDevo(Date fechaDevo) {this.fechaDevo = fechaDevo;}
+  public String getEstado() {
+    return estado;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Prestamo prestamo = (Prestamo) o;
-        return idPrestamo == prestamo.idPrestamo && Objects.equals(fechaEntre, prestamo.fechaEntre) && Objects.equals(usuario, prestamo.usuario) && Objects.equals(libro, prestamo.libro) && Objects.equals(fechaDevo, prestamo.fechaDevo);
-    }
+  public void setEstado(String estado) {
+    this.estado = estado;
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(idPrestamo, fechaEntre, usuario, libro, fechaDevo);
-    }
+  public Usuario getUsuario() {
+    return usuario;
+  }
 
-    @Override
-    public String toString() {
-        return "Prestamos{" +
-                "idPrestamo=" + idPrestamo +
-                ", fechaEntre=" + fechaEntre +
-                ", usuario=" + usuario +
-                ", libro=" + libro +
-                ", fechaDevo=" + fechaDevo +
-                '}';
-    }
+  public void setUsuario(Usuario usuario) {
+    this.usuario = usuario;
+  }
 
-    public void setFechaEntre(String fechaEntre) {
-    }
+  public Libro getLibro() {
+    return libro;
+  }
 
-    public void setUsuario(int nombre) {
+  public void setLibro(Libro libro) {
+    this.libro = libro;
+  }
 
-    }
 
-    public void setLibro(int idLibro) {
 
-    }
+  @Override
+  public String toString() {
+    return "Prestamo{" +
+        "idPrestamo=" + idPrestamo +
+        ", fechaPrestamo=" + fechaPrestamo +
+        ", fechaDevolucion=" + fechaDevolucion +
+        ", estado='" + estado + '\'' +
+        ", usuario=" + (usuario != null ? usuario.getNombre() : "null") +
+        ", libro=" + (libro != null ? libro.getNombre() : "null") +
+        '}';
+  }
 
-    public void setFechaDevo(String fechaDevo) {
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Prestamo prestamo = (Prestamo) o;
+    return idPrestamo == prestamo.idPrestamo &&
+        Objects.equals(fechaPrestamo, prestamo.fechaPrestamo) &&
+        Objects.equals(fechaDevolucion, prestamo.fechaDevolucion) &&
+        Objects.equals(estado, prestamo.estado) &&
+        Objects.equals(usuario, prestamo.usuario) &&
+        Objects.equals(libro, prestamo.libro);
+  }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(idPrestamo, fechaPrestamo, fechaDevolucion, estado, usuario, libro);
+  }
 }

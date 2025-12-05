@@ -15,13 +15,14 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
   private Connection conn = null;
 
   private static String SQL_INSERT =
-      "INSERT INTO usuarios (nombre, apellido, telefono, contrasenia, rol) " +
-          "VALUES (?, ?, ?, ?, ?)";
+      "INSERT INTO usuarios (nombre, apellido, email, telefono, contrasenia, rol) " +
+          "VALUES (?, ?, ?, ?, ?, ?)";
 
   private static String SQL_UPDATE =
       "UPDATE usuarios SET " +
           "nombre = ?, " +
           "apellido = ?, " +
+          "email = ?, " +
           "telefono = ?, " +
           "rol = ? " +
           "WHERE idUsuario = ?";
@@ -32,9 +33,8 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
   private static String SQL_DELETE = "DELETE FROM usuarios WHERE idUsuario = ?";
   private static String SQL_GETALL = "SELECT * FROM usuarios ORDER BY nombre";
   private static String SQL_GETBYID = "SELECT * FROM usuarios WHERE idUsuario = ?";
-
   private static String SQL_GETBYNOMBRE = "SELECT * FROM usuarios WHERE nombre = ?";
-
+  private static String SQL_GETBYEMAIL = "SELECT * FROM usuarios WHERE email = ?";
   private static String SQL_EXISTSBYID = "SELECT 1 FROM usuarios WHERE idUsuario = ?";
 
 
@@ -55,8 +55,9 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
         usuario.setIdUsuario(rs.getInt("idUsuario"));
         usuario.setNombre(rs.getString("nombre"));
         usuario.setApellido(rs.getString("apellido"));
+        usuario.setEmail(rs.getString("email"));
         usuario.setTelefono(rs.getString("telefono"));
-        usuario.setContrasenia(rs.getString("contrasenia")); // Se obtiene el HASH
+        usuario.setContrasenia(rs.getString("contrasenia"));
         usuario.setRol(Rol.valueOf(rs.getString("rol")));
 
         lista.add(usuario);
@@ -84,12 +85,11 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
 
       pst.setString(1, objeto.getNombre());
       pst.setString(2, objeto.getApellido());
-      pst.setString(3, objeto.getTelefono());
-
+      pst.setString(3, objeto.getEmail());
+      pst.setString(4, objeto.getTelefono());
       String claveHash = PasswordUtil.hashPassword(objeto.getContrasenia());
-      pst.setString(4, claveHash);
-
-      pst.setString(5, objeto.getRol().toString());
+      pst.setString(5, claveHash);
+      pst.setString(6, objeto.getRol().toString());
 
       int resultado = pst.executeUpdate();
 
@@ -104,7 +104,7 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
     } catch (SQLException e) {
       throw new RuntimeException("Error SQL al insertar usuario: " + e.getMessage(), e);
     } catch (IllegalArgumentException e) {
-      System.err.println("Error al hashear contraseña para " + objeto.getNombre() + ": " + e.getMessage());
+      System.out.println("Error al hashear contraseña para " + objeto.getNombre() + ": " + e.getMessage());
       throw new RuntimeException("Error en el proceso de hasheo", e);
     }
   }
@@ -119,9 +119,10 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
 
         pst.setString(1, objeto.getNombre());
         pst.setString(2, objeto.getApellido());
-        pst.setString(3, objeto.getTelefono());
-        pst.setString(4, objeto.getRol().toString());
-        pst.setInt(5, objeto.getIdUsuario()); // El ID va al final
+        pst.setString(3, objeto.getEmail());
+        pst.setString(4, objeto.getTelefono());
+        pst.setString(5, objeto.getRol().toString());
+        pst.setInt(6, objeto.getIdUsuario());
 
         int resultado = pst.executeUpdate();
 
@@ -152,7 +153,7 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
     } catch (SQLException e) {
       System.out.println("Error al actualizar la contraseña: " + e.getMessage());
     } catch (IllegalArgumentException e) {
-      System.err.println("Error al hashear nueva contraseña para " + idUsuario + ": " + e.getMessage());
+      System.out.println("Error al hashear nueva contraseña para " + idUsuario + ": " + e.getMessage());
     }
   }
 
@@ -161,19 +162,16 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
   public void delete(Integer id) {
     conn = obtenerConexion();
     try {
-      conn.setAutoCommit(false);
       PreparedStatement pst = conn.prepareStatement(SQL_DELETE);
       pst.setInt(1, id);
       int resultado = pst.executeUpdate();
 
       if (resultado == 1) {
-        conn.commit();
         System.out.println("Usuario eliminado correctamente");
       } else {
         System.out.println("No se pudo eliminar el usuario");
       }
 
-      conn.commit();
       pst.close();
       conn.close();
     } catch (SQLException e) {
@@ -199,6 +197,7 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
         usuario.setIdUsuario(rs.getInt("idUsuario"));
         usuario.setNombre((rs.getString("nombre")));
         usuario.setApellido(rs.getString("apellido"));
+        usuario.setEmail(rs.getString("email"));
         usuario.setTelefono(rs.getString("telefono"));
         usuario.setContrasenia(rs.getString("contrasenia"));
         usuario.setRol(Rol.valueOf(rs.getString("rol")));
@@ -228,6 +227,7 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
         usuario.setIdUsuario(rs.getInt("idUsuario"));
         usuario.setNombre(rs.getString("nombre"));
         usuario.setApellido(rs.getString("apellido"));
+        usuario.setEmail(rs.getString("email"));
         usuario.setTelefono(rs.getString("telefono"));
         usuario.setContrasenia(rs.getString("contrasenia"));
         usuario.setRol(Rol.valueOf(rs.getString("rol")));
@@ -236,7 +236,7 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
       pst.close();
       rs.close();
     } catch (SQLException e) {
-      System.err.println("Error al buscar usuario por nombre: " + e.getMessage());
+      System.out.println("Error al buscar usuario por nombre: " + e.getMessage());
       throw new RuntimeException(e);
     }
     return usuario;
@@ -267,7 +267,37 @@ public class UsuarioImpl implements AdmConexion, DAO<Usuario, Integer> {
     return existe;
   }
 
+  public Usuario getByEmail(String email) {
+    conn = obtenerConexion();
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    Usuario usuario = null;
 
+    try {
+      pst = conn.prepareStatement(SQL_GETBYEMAIL);
+      pst.setString(1, email);
+      rs = pst.executeQuery();
+
+      if (rs.next()) {
+        usuario = new Usuario();
+        usuario.setIdUsuario(rs.getInt("idUsuario"));
+        usuario.setNombre(rs.getString("nombre"));
+        usuario.setApellido(rs.getString("apellido"));
+        usuario.setEmail(rs.getString("email"));
+        usuario.setTelefono(rs.getString("telefono"));
+        usuario.setContrasenia(rs.getString("contrasenia"));
+        usuario.setRol(Rol.valueOf(rs.getString("rol")));
+      }
+
+      pst.close();
+      rs.close();
+      conn.close();
+    } catch (SQLException e) {
+      System.out.println("Error al buscar usuario por email: " + e.getMessage());
+      throw new RuntimeException(e);
+    }
+    return usuario;
+  }
 
   @Override
   public Connection obtenerConexion() {

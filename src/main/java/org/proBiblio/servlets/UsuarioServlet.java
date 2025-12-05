@@ -1,6 +1,5 @@
 package org.proBiblio.servlets;
 
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,31 +21,29 @@ public class UsuarioServlet extends HttpServlet {
   public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
     String operacion = req.getParameter("operacion");
 
-    if (operacion.equals("eliminar")) {
+    if ("eliminar".equals(operacion)) {
       procesarSolicitud(req, res);
     } else {
       res.sendRedirect(req.getContextPath() + "/index.jsp");
     }
   }
 
-
   private void procesarSolicitud(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
     String nombre = "";
     String apellido = "";
+    String email = "";
     String telefono = "";
     String contrasenia = "";
     Rol rol = null;
-    String operacion = "nuevo";
+    String operacion = req.getParameter("operacion");
     int id = -1;
 
     UsuarioImpl usuarioImpl = new UsuarioImpl();
 
-
-    operacion = req.getParameter("operacion");
-
     if ("editar".equals(operacion) || "nuevo".equals(operacion)) {
       nombre = req.getParameter("txtNombre");
       apellido = req.getParameter("txtApellido");
+      email = req.getParameter("txtEmail");
       telefono = req.getParameter("txtTelefono");
       contrasenia = req.getParameter("txtContrasenia");
 
@@ -55,35 +52,25 @@ public class UsuarioServlet extends HttpServlet {
         try {
           rol = Rol.valueOf(rolStr.toUpperCase());
         } catch (IllegalArgumentException e) {
-          System.err.println("Advertencia: El valor de Rol '" + rolStr + "' no es válido.");
+          System.out.println("El valor de Rol '" + rolStr + "' no es válido.");
         }
       }
     }
 
-
-    if (operacion.equals("nuevo")) {
-
+    if ("nuevo".equals(operacion)) {
       Usuario usuario = new Usuario();
-      usuario.setNombre(req.getParameter("txtNombre"));
-      usuario.setApellido(req.getParameter("txtApellido"));
-      usuario.setTelefono(req.getParameter("txtTelefono"));
-
+      usuario.setNombre(nombre);
+      usuario.setApellido(apellido);
+      usuario.setEmail(email);
+      usuario.setTelefono(telefono);
       String rolParam = req.getParameter("txtRol");
-
-
       String rolAsignado = (rolParam == null) ? "USUARIO" : rolParam;
-
       usuario.setRol(Rol.valueOf(rolAsignado));
-
-
 
       usuario.setContrasenia(contrasenia);
 
       usuarioImpl.insert(usuario);
-
-
     }
-
 
     if ("editar".equals(operacion)) {
       String idStr = req.getParameter("txtId");
@@ -91,20 +78,25 @@ public class UsuarioServlet extends HttpServlet {
         try {
           id = Integer.parseInt(idStr);
           Usuario usuarioEditar = usuarioImpl.getById(id);
+
           if (usuarioEditar != null) {
             usuarioEditar.setNombre(nombre);
             usuarioEditar.setApellido(apellido);
+            usuarioEditar.setEmail(email);
             usuarioEditar.setTelefono(telefono);
-            usuarioEditar.setContrasenia(contrasenia);
             usuarioEditar.setRol(rol);
+
             usuarioImpl.update(usuarioEditar);
+
+            if (contrasenia != null && !contrasenia.isEmpty()) {
+              usuarioImpl.updatePassword(id, contrasenia);
+            }
           }
         } catch (NumberFormatException e) {
-          System.err.println("Error de formato en ID al editar (Usuario): " + idStr);
+          System.out.println("Error de formato en ID al editar: " + idStr);
         }
       }
     }
-
 
     if ("eliminar".equals(operacion)) {
       String idStr = req.getParameter("id");
@@ -117,11 +109,16 @@ public class UsuarioServlet extends HttpServlet {
           id = Integer.parseInt(idStr);
           usuarioImpl.delete(id);
         } catch (NumberFormatException e) {
-          System.err.println("Error de formato en ID al eliminar (Usuario): " + idStr);
+          System.out.println("Error de formato en ID al eliminar: " + idStr);
         }
       }
     }
 
-    res.sendRedirect(req.getContextPath() + "/index.jsp");
+    String rolParam = req.getParameter("txtRol");
+    if (rolParam == null && "nuevo".equals(operacion)) {
+      res.sendRedirect(req.getContextPath() + "/login.jsp?mensajeExito=Registro exitoso. Inicie sesión.");
+    } else {
+      res.sendRedirect(req.getContextPath() + "/listaUsuarios.jsp");
+    }
   }
 }

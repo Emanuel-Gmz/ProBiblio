@@ -1,6 +1,6 @@
 package org.proBiblio.servlets;
 
-import jakarta.servlet.RequestDispatcher; // <--- ADAPTADO
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,40 +8,38 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.proBiblio.dao.UsuarioImpl;
 import org.proBiblio.entities.Usuario;
-import org.proBiblio.util.PasswordUtil; // <--- ADAPTADO (Asumiendo que tienes esta clase)
+import org.proBiblio.util.PasswordUtil;
 
 import java.io.IOException;
-import java.util.Map; // <--- ADAPTADO
-import java.util.concurrent.ConcurrentHashMap; // <--- ADAPTADO
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class LoginServlet extends HttpServlet {
   private UsuarioImpl usuarioImpl = new UsuarioImpl();
 
   private static Map<String, Usuario> usuariosActivos = new ConcurrentHashMap<>();
 
-
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
-
-    String nombre = req.getParameter("txtIdentificador");
+    String email = req.getParameter("txtEmail");
     String contrasenia = req.getParameter("txtContrasenia");
 
-    if (nombre == null || contrasenia == null || nombre.trim().isEmpty() || contrasenia.trim().isEmpty()) {
-      req.setAttribute("mensajeError", "Identificador y contraseña son obligatorios.");
+    if (email == null || contrasenia == null || email.trim().isEmpty() || contrasenia.trim().isEmpty()) {
+      req.setAttribute("mensajeError", "Email y contraseña son obligatorios.");
       req.getRequestDispatcher("login.jsp").forward(req, res);
       return;
     }
 
-    nombre = nombre.trim();
+    email = email.trim();
 
-    if (usuariosActivos.containsKey(nombre)) {
-      req.setAttribute("mensajeError", "Ya hay una sesión activa con este identificador. Cierre la otra sesión primero.");
+    if (usuariosActivos.containsKey(email)) {
+      req.setAttribute("mensajeError", "Ya hay una sesión activa con este email. Cierre la otra sesión primero.");
       req.getRequestDispatcher("login.jsp").forward(req, res);
       return;
     }
 
-    Usuario usuario = usuarioImpl.getByNombre(nombre);
+    Usuario usuario = usuarioImpl.getByEmail(email);
 
     boolean loginValido = false;
 
@@ -51,7 +49,7 @@ public class LoginServlet extends HttpServlet {
           loginValido = true;
         }
       } catch (Exception e) {
-        System.err.println("Error al verificar la contraseña: " + e.getMessage());
+        System.out.println("Error al verificar la contraseña: " + e.getMessage());
         req.setAttribute("mensajeError", "Error en el sistema de autenticación.");
         req.getRequestDispatcher("login.jsp").forward(req, res);
         return;
@@ -59,14 +57,14 @@ public class LoginServlet extends HttpServlet {
     }
 
     if (loginValido) {
-      usuariosActivos.put(nombre, usuario);
+      usuariosActivos.put(email, usuario);
 
       HttpSession session = req.getSession();
       session.setAttribute("usuarioLogueado", usuario);
       session.setAttribute("rol", usuario.getRol().toString());
 
       String rol = usuario.getRol().toString();
-      String urlDestino = "index.jsp";
+      String urlDestino = "/index.jsp";
 
       if (rol.equals("ADMIN")) {
         urlDestino = "/admin.jsp";
@@ -75,7 +73,6 @@ public class LoginServlet extends HttpServlet {
       } else {
         urlDestino = "/listaLibros.jsp";
       }
-
 
       res.sendRedirect(req.getContextPath() + urlDestino);
 
@@ -104,7 +101,7 @@ public class LoginServlet extends HttpServlet {
     if (session != null) {
       Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
       if (usuario != null) {
-        usuariosActivos.remove(usuario.getNombre());
+        usuariosActivos.remove(usuario.getEmail());
       }
       session.invalidate();
     }

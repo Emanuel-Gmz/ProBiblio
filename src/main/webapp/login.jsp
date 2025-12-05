@@ -15,13 +15,11 @@
 
                 <div class="card-body p-4">
 
-
                     <c:if test="${not empty mensajeExito}">
                         <div class="alert alert-success" role="alert">
                             ${mensajeExito}
                         </div>
                     </c:if>
-
 
                     <c:if test="${not empty mensajeError}">
                         <div class="alert alert-danger" role="alert">
@@ -29,20 +27,17 @@
                         </div>
                     </c:if>
 
-
                     <form action="${pageContext.request.contextPath}/LoginServlet" method="POST">
 
-
                         <div class="mb-3">
-                            <label for="txtIdentificador" class="form-label">Usuario</label>
-                            <input type="text"
-                                   name="txtIdentificador"
-                                   id="txtIdentificador"
+                            <label for="txtEmail" class="form-label">Correo Electrónico</label>
+                            <input type="email"
+                                   name="txtEmail"
+                                   id="txtEmail"
                                    class="form-control"
-                                   placeholder="Ingrese su nombre de usuario"
+                                   placeholder="nombre@ejemplo.com"
                                    required />
                         </div>
-
 
                         <div class="mb-4">
                             <label for="txtContrasenia" class="form-label">Contraseña</label>
@@ -54,7 +49,6 @@
                                    required />
                         </div>
 
-
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary btn-lg">Entrar</button>
                         </div>
@@ -64,7 +58,7 @@
 
                 <div class="card-footer text-center">
                     <p class="mb-0">¿Aún no tienes cuenta?
-                        <a href="${pageContext.request.contextPath}/formUsuarios.jsp" class="text-primary fw-bold">Regístrate aquí</a>
+                        <a href="${pageContext.request.contextPath}/formUsuarios.jsp?operacion=nuevo" class="text-primary fw-bold">Regístrate aquí</a>
                     </p>
                 </div>
             </div>

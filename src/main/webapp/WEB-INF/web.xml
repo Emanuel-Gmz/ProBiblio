@@ -36,4 +36,14 @@
         <url-pattern>/LoginServlet</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>PrestamoServlet</servlet-name>
+        <servlet-class>org.proBiblio.servlets.PrestamoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PrestamoServlet</servlet-name>
+        <url-pattern>/PrestamoServlet</url-pattern>
+    </servlet-mapping>
+
+
 </web-app>
